@@ -1,0 +1,507 @@
+/* ============================================================
+   ITパスポート 学習  —  用語 + クイズ ロジック
+   ============================================================ */
+
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------
+     重要用語
+     ストラテジ / マネジメント / テクノロジ の三分野からの横断
+     ------------------------------------------------------------ */
+  const TERMS = [
+    {
+      term: "PDCAサイクル",
+      description:
+        "Plan・Do・Check・Actの4段階を繰り返し、業務や品質を継続的に改善する管理手法。",
+    },
+    {
+      term: "BCP",
+      description:
+        "Business Continuity Plan。災害や障害などの不測の事態でも事業を継続・早期復旧させるための計画。",
+    },
+    {
+      term: "SWOT分析",
+      description:
+        "自社の強み・弱みと、外部環境の機会・脅威を整理し、経営戦略の立案に用いるフレームワーク。",
+    },
+    {
+      term: "KPI",
+      description:
+        "Key Performance Indicator。目標達成度を測るために設定する、定量的な業績評価指標。",
+    },
+    {
+      term: "DX",
+      description:
+        "デジタルトランスフォーメーション。デジタル技術を用いて製品・サービスやビジネスモデルを変革する取組み。",
+    },
+    {
+      term: "アジャイル開発",
+      description:
+        "短い反復（イテレーション）で計画・開発・テストを繰り返し、要求変化に柔軟に対応する開発手法。",
+    },
+    {
+      term: "ITIL",
+      description:
+        "ITサービスマネジメントのベストプラクティスを体系化したフレームワーク。",
+    },
+    {
+      term: "SLA",
+      description:
+        "Service Level Agreement。サービス提供者と利用者の間で、サービス品質の水準を明文化した合意。",
+    },
+    {
+      term: "プロジェクトマネジメント",
+      description:
+        "QCD（品質・コスト・納期）などの制約下で、計画・実行・監視を通じて目的を達成する活動。",
+    },
+    {
+      term: "CPU",
+      description:
+        "Central Processing Unit。命令の解釈と演算を行う、コンピュータの中核装置。",
+    },
+    {
+      term: "RAM",
+      description:
+        "Random Access Memory。電源を切るとデータが失われる、高速に読み書き可能な主記憶装置。",
+    },
+    {
+      term: "TCP/IP",
+      description:
+        "インターネットで標準的に用いられる通信プロトコル群。アプリケーション〜ネットワーク層まで階層化されている。",
+    },
+    {
+      term: "HTTPS",
+      description:
+        "HTTP通信をSSL/TLSで暗号化したプロトコル。盗聴・改ざん・なりすましを防ぐ。",
+    },
+    {
+      term: "SQL",
+      description:
+        "リレーショナルデータベースを操作するための、問合せ・更新・定義を行う標準言語。",
+    },
+    {
+      term: "ファイアウォール",
+      description:
+        "ネットワーク境界で通信を監視し、許可された通信のみを通過させるセキュリティ機構。",
+    },
+    {
+      term: "二要素認証",
+      description:
+        "知識・所持・生体のうち、異なる二つの要素を組み合わせて本人確認を行う認証方式。",
+    },
+    {
+      term: "公開鍵暗号方式",
+      description:
+        "暗号化と復号で異なる鍵を用いる方式。公開鍵で暗号化した情報は、対となる秘密鍵でのみ復号できる。",
+    },
+    {
+      term: "AI",
+      description:
+        "人工知能。学習・推論・判断など、人間の知的活動をコンピュータで実現する技術。",
+    },
+    {
+      term: "IoT",
+      description:
+        "Internet of Things。さまざまな「モノ」がネットワークに接続し、情報をやり取りする仕組み。",
+    },
+    {
+      term: "クラウドコンピューティング",
+      description:
+        "ネットワーク経由でサーバ・ストレージ・アプリケーションなどの計算資源を必要な分だけ利用する形態。",
+    },
+    {
+      term: "RAID",
+      description:
+        "複数の物理ディスクを束ねて、高速化や冗長化を実現する技術。RAID0〜RAID6などの方式がある。",
+    },
+    {
+      term: "DHCP",
+      description:
+        "端末にIPアドレスなどのネットワーク設定を自動で割り当てるプロトコル。",
+    },
+    {
+      term: "VPN",
+      description:
+        "公衆回線上に暗号化された仮想的な専用線を構築し、安全に通信する技術。",
+    },
+    {
+      term: "ランサムウェア",
+      description:
+        "感染した端末のデータを暗号化するなどして利用を妨げ、復旧と引換えに金銭を要求する不正プログラム。",
+    },
+  ];
+
+  /* ------------------------------------------------------------
+     問題データ（10問）
+     分野配分: ストラテジ3 / マネジメント2 / テクノロジ5
+     出典: ITパスポート試験 過去問題（参照: 過去問道場）
+     ------------------------------------------------------------ */
+  const QUESTIONS = [
+    {
+      id: 1,
+      category: "ストラテジ",
+      year: "令和5年4月",
+      question:
+        "企業の経営戦略を策定する際に用いるSWOT分析において、自社の内部環境を表すものの組合せはどれか。",
+      choices: [
+        "ア  強み（Strength）と 機会（Opportunity）",
+        "イ  強み（Strength）と 弱み（Weakness）",
+        "ウ  機会（Opportunity）と 脅威（Threat）",
+        "エ  弱み（Weakness）と 脅威（Threat）",
+      ],
+      answerIndex: 1,
+      explanation:
+        "SWOT分析では、内部環境を強み（S）と弱み（W）、外部環境を機会（O）と脅威（T）として整理する。",
+    },
+    {
+      id: 2,
+      category: "ストラテジ",
+      year: "令和4年4月",
+      question:
+        "CSR（Corporate Social Responsibility）の説明として、最も適切なものはどれか。",
+      choices: [
+        "ア  企業が社会的な責任を果たすために行う、環境保全や人権尊重などの活動。",
+        "イ  企業の顧客満足度を高めるために実施する、製品やサービスの品質向上活動。",
+        "ウ  企業の経営資源を効率的に活用して利益を最大化する経営手法。",
+        "エ  企業の従業員に対する福利厚生制度を整備する活動。",
+      ],
+      answerIndex: 0,
+      explanation:
+        "CSRは「企業の社会的責任」と訳され、企業が利益追求だけでなく、環境・人権・地域社会などに対する責任を果たそうとする考え方である。",
+    },
+    {
+      id: 3,
+      category: "ストラテジ",
+      year: "令和3年10月",
+      question:
+        "BPR（Business Process Reengineering）の目的として、最も適切なものはどれか。",
+      choices: [
+        "ア  既存の業務プロセスを部分的に改善し、作業効率を高める。",
+        "イ  業務プロセスを抜本的に見直し、再設計することで劇的な経営改善を図る。",
+        "ウ  情報システムをクラウド環境へ段階的に移行する。",
+        "エ  従業員のスキル向上を目的とした教育研修を体系化する。",
+      ],
+      answerIndex: 1,
+      explanation:
+        "BPRは業務プロセスを根本から再設計（リエンジニアリング）し、コスト・品質・サービス・スピードなどを劇的に改善することを目的とする。",
+    },
+    {
+      id: 4,
+      category: "マネジメント",
+      year: "令和5年10月",
+      question:
+        "アジャイル開発の特徴として、最も適切なものはどれか。",
+      choices: [
+        "ア  開発の初期段階で、要件を詳細かつ網羅的に確定させてから実装に入る。",
+        "イ  短い期間の反復開発を繰り返し、利用者のフィードバックを取り入れながら進める。",
+        "ウ  成果物ごとに独立した専門チームを編成し、前工程の完了後に次工程へ引き渡す。",
+        "エ  大規模なドキュメント作成を最優先し、設計書に基づいて実装を行う。",
+      ],
+      answerIndex: 1,
+      explanation:
+        "アジャイル開発は、短いイテレーションを繰り返しながら、利用者と対話を重ねて変化に柔軟に対応する開発手法である。",
+    },
+    {
+      id: 5,
+      category: "マネジメント",
+      year: "令和4年10月",
+      question:
+        "ITサービスマネジメントにおいて、提供するサービスの品質や範囲を事前に定め、利用者との間で合意する文書はどれか。",
+      choices: [
+        "ア  NDA",
+        "イ  RFP",
+        "ウ  SLA",
+        "エ  WBS",
+      ],
+      answerIndex: 2,
+      explanation:
+        "SLA（Service Level Agreement）は、サービス提供者と利用者の間で、サービス品質の水準を明文化する合意書である。",
+    },
+    {
+      id: 6,
+      category: "テクノロジ",
+      year: "令和5年4月",
+      question:
+        "公開鍵暗号方式における送信者と受信者の鍵の使い方として、正しいものはどれか。",
+      choices: [
+        "ア  送信者は受信者の公開鍵で暗号化し、受信者は自分の秘密鍵で復号する。",
+        "イ  送信者は自分の秘密鍵で暗号化し、受信者は送信者の公開鍵で復号する。",
+        "ウ  送信者は自分の公開鍵で暗号化し、受信者は自分の公開鍵で復号する。",
+        "エ  送信者と受信者は同一の秘密鍵を共有して暗号化・復号を行う。",
+      ],
+      answerIndex: 0,
+      explanation:
+        "公開鍵暗号方式で機密性を確保する場合、送信者は受信者の公開鍵で暗号化し、受信者のみが保持する秘密鍵で復号する。",
+    },
+    {
+      id: 7,
+      category: "テクノロジ",
+      year: "令和4年4月",
+      question:
+        "ネットワーク上でIPアドレスなどの設定情報を、接続した端末へ自動的に割り当てるプロトコルはどれか。",
+      choices: [
+        "ア  DHCP",
+        "イ  DNS",
+        "ウ  FTP",
+        "エ  SMTP",
+      ],
+      answerIndex: 0,
+      explanation:
+        "DHCP（Dynamic Host Configuration Protocol）は、IPアドレス・サブネットマスク・デフォルトゲートウェイなどを端末へ自動で払い出すプロトコルである。",
+    },
+    {
+      id: 8,
+      category: "テクノロジ",
+      year: "令和3年10月",
+      question:
+        "リレーショナルデータベースで、表に格納された行を一意に識別するために設定する列（またはその組合せ）を何というか。",
+      choices: [
+        "ア  外部キー",
+        "イ  候補キー",
+        "ウ  主キー",
+        "エ  副キー",
+      ],
+      answerIndex: 2,
+      explanation:
+        "主キー（Primary Key）は、表中の各行を一意に識別するために設定される列またはその組合せである。NULL値は許容されない。",
+    },
+    {
+      id: 9,
+      category: "テクノロジ",
+      year: "令和5年10月",
+      question:
+        "情報セキュリティの3要素である「機密性」「完全性」「可用性」のうち、完全性を維持するための対策として、最も適切なものはどれか。",
+      choices: [
+        "ア  サーバを冗長化し、障害時にも継続して利用できるようにする。",
+        "イ  データへのアクセス権限を最小化し、閲覧者を限定する。",
+        "ウ  データにディジタル署名を付与し、改ざんを検知できるようにする。",
+        "エ  通信経路を暗号化し、第三者による盗聴を防ぐ。",
+      ],
+      answerIndex: 2,
+      explanation:
+        "完全性（Integrity）は、データが改ざんされていない正確な状態を保つ性質。ディジタル署名やハッシュ値による改ざん検知が代表的な対策である。",
+    },
+    {
+      id: 10,
+      category: "テクノロジ",
+      year: "令和4年10月",
+      question:
+        "IoT（Internet of Things）の事例として、最も適切なものはどれか。",
+      choices: [
+        "ア  オフィスのPCを社内LANに接続し、ファイルを共有する。",
+        "イ  スマートフォンのアプリストアから、動画配信サービスを利用する。",
+        "ウ  センサを内蔵した農業機械がインターネットに接続し、収集した生育データを自動で送信する。",
+        "エ  データセンター内のサーバ群を仮想化技術で統合し、運用効率を高める。",
+      ],
+      answerIndex: 2,
+      explanation:
+        "IoTは「モノのインターネット」であり、従来インターネットに接続されていなかった機器やセンサがネットワークに繋がり、データをやり取りする仕組みを指す。",
+    },
+  ];
+
+  /* ------------------------------------------------------------
+     State
+     ------------------------------------------------------------ */
+  const state = {
+    screen: "terms", // "terms" | "quiz" | "result"
+    order: [],
+    cursor: 0,
+    score: 0,
+    answered: false,
+  };
+
+  /* ------------------------------------------------------------
+     Helpers
+     ------------------------------------------------------------ */
+  function $(selector) {
+    return document.querySelector(selector);
+  }
+
+  function clear(node) {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  /* ------------------------------------------------------------
+     用語画面の描画
+     ------------------------------------------------------------ */
+  function renderTerms() {
+    const list = $("#terms-list");
+    clear(list);
+
+    TERMS.forEach(function (item) {
+      const row = document.createElement("div");
+      const dt = document.createElement("dt");
+      const dd = document.createElement("dd");
+      dt.textContent = item.term;
+      dd.textContent = item.description;
+      row.appendChild(dt);
+      row.appendChild(dd);
+      list.appendChild(row);
+    });
+  }
+
+  /* ------------------------------------------------------------
+     クイズ画面の描画
+     ------------------------------------------------------------ */
+  function currentQuestion() {
+    const idx = state.order[state.cursor];
+    return QUESTIONS[idx];
+  }
+
+  function renderQuiz() {
+    const q = currentQuestion();
+
+    $("#quiz-category").textContent = q.category;
+    $("#quiz-progress").textContent =
+      state.cursor + 1 + " / " + state.order.length;
+    $("#quiz-question").textContent = q.question;
+    $("#quiz-year").textContent = q.year + " 出題";
+
+    const choicesNode = $("#quiz-choices");
+    clear(choicesNode);
+
+    q.choices.forEach(function (text, i) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice";
+      btn.textContent = text;
+      btn.addEventListener("click", function () {
+        handleAnswer(i);
+      });
+      choicesNode.appendChild(btn);
+    });
+
+    $("#quiz-feedback").hidden = true;
+    $("#feedback-label").textContent = "";
+    $("#feedback-label").className = "feedback-label";
+    $("#feedback-explanation").textContent = "";
+
+    const nextBtn = $("#next-btn");
+    nextBtn.disabled = true;
+    nextBtn.textContent =
+      state.cursor + 1 === state.order.length ? "結果を見る" : "次へ";
+
+    state.answered = false;
+  }
+
+  function handleAnswer(selectedIndex) {
+    if (state.answered) return;
+    state.answered = true;
+
+    const q = currentQuestion();
+    const isCorrect = selectedIndex === q.answerIndex;
+    if (isCorrect) state.score += 1;
+
+    const buttons = document.querySelectorAll("#quiz-choices .choice");
+    buttons.forEach(function (btn, i) {
+      btn.disabled = true;
+      if (i === q.answerIndex) {
+        btn.classList.add("is-correct");
+      } else if (i === selectedIndex) {
+        btn.classList.add("is-wrong");
+      } else {
+        btn.classList.add("is-dimmed");
+      }
+    });
+
+    const label = $("#feedback-label");
+    label.textContent = isCorrect ? "正解" : "不正解";
+    label.classList.add(isCorrect ? "is-correct" : "is-wrong");
+
+    $("#feedback-explanation").textContent = q.explanation;
+    $("#quiz-feedback").hidden = false;
+    $("#next-btn").disabled = false;
+    $("#next-btn").focus();
+  }
+
+  /* ------------------------------------------------------------
+     結果画面の描画
+     ------------------------------------------------------------ */
+  function renderResult() {
+    const total = state.order.length;
+    const score = state.score;
+
+    $("#result-score").textContent = String(score);
+    $("#result-total").textContent = String(total);
+
+    const ratio = score / total;
+    let msg;
+    if (ratio === 1) {
+      msg = "全問正解です。知識が確かに定着しています。";
+    } else if (ratio >= 0.7) {
+      msg = "合格圏に入っています。誤答した分野を静かに振り返りましょう。";
+    } else if (ratio >= 0.4) {
+      msg = "もう一歩です。用語集に戻り、基本を確認してみてください。";
+    } else {
+      msg = "焦らず、用語集を丁寧に読み直すところから始めましょう。";
+    }
+    $("#result-message").textContent = msg;
+  }
+
+  /* ------------------------------------------------------------
+     画面切替
+     ------------------------------------------------------------ */
+  function showScreen(name) {
+    state.screen = name;
+    $("#screen-terms").hidden = name !== "terms";
+    $("#screen-quiz").hidden = name !== "quiz";
+    $("#screen-result").hidden = name !== "result";
+    window.scrollTo(0, 0);
+  }
+
+  function startQuiz() {
+    state.order = shuffle(QUESTIONS.map(function (_, i) {
+      return i;
+    }));
+    state.cursor = 0;
+    state.score = 0;
+    state.answered = false;
+    showScreen("quiz");
+    renderQuiz();
+  }
+
+  function nextQuestion() {
+    if (!state.answered) return;
+    state.cursor += 1;
+    if (state.cursor >= state.order.length) {
+      showScreen("result");
+      renderResult();
+    } else {
+      renderQuiz();
+    }
+  }
+
+  function restart() {
+    showScreen("terms");
+    window.scrollTo(0, 0);
+  }
+
+  /* ------------------------------------------------------------
+     Init
+     ------------------------------------------------------------ */
+  function init() {
+    renderTerms();
+    $("#start-btn").addEventListener("click", startQuiz);
+    $("#next-btn").addEventListener("click", nextQuestion);
+    $("#restart-btn").addEventListener("click", restart);
+    showScreen("terms");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
