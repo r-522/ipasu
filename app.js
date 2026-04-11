@@ -145,10 +145,10 @@
       question:
         "企業の経営戦略を策定する際に用いるSWOT分析において、自社の内部環境を表すものの組合せはどれか。",
       choices: [
-        "ア  強み（Strength）と 機会（Opportunity）",
-        "イ  強み（Strength）と 弱み（Weakness）",
-        "ウ  機会（Opportunity）と 脅威（Threat）",
-        "エ  弱み（Weakness）と 脅威（Threat）",
+        "強み（Strength）と 機会（Opportunity）",
+        "強み（Strength）と 弱み（Weakness）",
+        "機会（Opportunity）と 脅威（Threat）",
+        "弱み（Weakness）と 脅威（Threat）",
       ],
       answerIndex: 1,
       explanation:
@@ -161,10 +161,10 @@
       question:
         "CSR（Corporate Social Responsibility）の説明として、最も適切なものはどれか。",
       choices: [
-        "ア  企業が社会的な責任を果たすために行う、環境保全や人権尊重などの活動。",
-        "イ  企業の顧客満足度を高めるために実施する、製品やサービスの品質向上活動。",
-        "ウ  企業の経営資源を効率的に活用して利益を最大化する経営手法。",
-        "エ  企業の従業員に対する福利厚生制度を整備する活動。",
+        "企業が社会的な責任を果たすために行う、環境保全や人権尊重などの活動。",
+        "企業の顧客満足度を高めるために実施する、製品やサービスの品質向上活動。",
+        "企業の経営資源を効率的に活用して利益を最大化する経営手法。",
+        "企業の従業員に対する福利厚生制度を整備する活動。",
       ],
       answerIndex: 0,
       explanation:
@@ -177,10 +177,10 @@
       question:
         "BPR（Business Process Reengineering）の目的として、最も適切なものはどれか。",
       choices: [
-        "ア  既存の業務プロセスを部分的に改善し、作業効率を高める。",
-        "イ  業務プロセスを抜本的に見直し、再設計することで劇的な経営改善を図る。",
-        "ウ  情報システムをクラウド環境へ段階的に移行する。",
-        "エ  従業員のスキル向上を目的とした教育研修を体系化する。",
+        "既存の業務プロセスを部分的に改善し、作業効率を高める。",
+        "業務プロセスを抜本的に見直し、再設計することで劇的な経営改善を図る。",
+        "情報システムをクラウド環境へ段階的に移行する。",
+        "従業員のスキル向上を目的とした教育研修を体系化する。",
       ],
       answerIndex: 1,
       explanation:
@@ -193,10 +193,10 @@
       question:
         "アジャイル開発の特徴として、最も適切なものはどれか。",
       choices: [
-        "ア  開発の初期段階で、要件を詳細かつ網羅的に確定させてから実装に入る。",
-        "イ  短い期間の反復開発を繰り返し、利用者のフィードバックを取り入れながら進める。",
-        "ウ  成果物ごとに独立した専門チームを編成し、前工程の完了後に次工程へ引き渡す。",
-        "エ  大規模なドキュメント作成を最優先し、設計書に基づいて実装を行う。",
+        "開発の初期段階で、要件を詳細かつ網羅的に確定させてから実装に入る。",
+        "短い期間の反復開発を繰り返し、利用者のフィードバックを取り入れながら進める。",
+        "成果物ごとに独立した専門チームを編成し、前工程の完了後に次工程へ引き渡す。",
+        "大規模なドキュメント作成を最優先し、設計書に基づいて実装を行う。",
       ],
       answerIndex: 1,
       explanation:
@@ -209,10 +209,10 @@
       question:
         "ITサービスマネジメントにおいて、提供するサービスの品質や範囲を事前に定め、利用者との間で合意する文書はどれか。",
       choices: [
-        "ア  NDA",
-        "イ  RFP",
-        "ウ  SLA",
-        "エ  WBS",
+        "NDA",
+        "RFP",
+        "SLA",
+        "WBS",
       ],
       answerIndex: 2,
       explanation:
@@ -225,10 +225,10 @@
       question:
         "公開鍵暗号方式における送信者と受信者の鍵の使い方として、正しいものはどれか。",
       choices: [
-        "ア  送信者は受信者の公開鍵で暗号化し、受信者は自分の秘密鍵で復号する。",
-        "イ  送信者は自分の秘密鍵で暗号化し、受信者は送信者の公開鍵で復号する。",
-        "ウ  送信者は自分の公開鍵で暗号化し、受信者は自分の公開鍵で復号する。",
-        "エ  送信者と受信者は同一の秘密鍵を共有して暗号化・復号を行う。",
+        "送信者は受信者の公開鍵で暗号化し、受信者は自分の秘密鍵で復号する。",
+        "送信者は自分の秘密鍵で暗号化し、受信者は送信者の公開鍵で復号する。",
+        "送信者は自分の公開鍵で暗号化し、受信者は自分の公開鍵で復号する。",
+        "送信者と受信者は同一の秘密鍵を共有して暗号化・復号を行う。",
       ],
       answerIndex: 0,
       explanation:
@@ -241,10 +241,10 @@
       question:
         "ネットワーク上でIPアドレスなどの設定情報を、接続した端末へ自動的に割り当てるプロトコルはどれか。",
       choices: [
-        "ア  DHCP",
-        "イ  DNS",
-        "ウ  FTP",
-        "エ  SMTP",
+        "DHCP",
+        "DNS",
+        "FTP",
+        "SMTP",
       ],
       answerIndex: 0,
       explanation:
@@ -257,10 +257,10 @@
       question:
         "リレーショナルデータベースで、表に格納された行を一意に識別するために設定する列（またはその組合せ）を何というか。",
       choices: [
-        "ア  外部キー",
-        "イ  候補キー",
-        "ウ  主キー",
-        "エ  副キー",
+        "外部キー",
+        "候補キー",
+        "主キー",
+        "副キー",
       ],
       answerIndex: 2,
       explanation:
@@ -273,10 +273,10 @@
       question:
         "情報セキュリティの3要素である「機密性」「完全性」「可用性」のうち、完全性を維持するための対策として、最も適切なものはどれか。",
       choices: [
-        "ア  サーバを冗長化し、障害時にも継続して利用できるようにする。",
-        "イ  データへのアクセス権限を最小化し、閲覧者を限定する。",
-        "ウ  データにディジタル署名を付与し、改ざんを検知できるようにする。",
-        "エ  通信経路を暗号化し、第三者による盗聴を防ぐ。",
+        "サーバを冗長化し、障害時にも継続して利用できるようにする。",
+        "データへのアクセス権限を最小化し、閲覧者を限定する。",
+        "データにディジタル署名を付与し、改ざんを検知できるようにする。",
+        "通信経路を暗号化し、第三者による盗聴を防ぐ。",
       ],
       answerIndex: 2,
       explanation:
@@ -289,10 +289,10 @@
       question:
         "IoT（Internet of Things）の事例として、最も適切なものはどれか。",
       choices: [
-        "ア  オフィスのPCを社内LANに接続し、ファイルを共有する。",
-        "イ  スマートフォンのアプリストアから、動画配信サービスを利用する。",
-        "ウ  センサを内蔵した農業機械がインターネットに接続し、収集した生育データを自動で送信する。",
-        "エ  データセンター内のサーバ群を仮想化技術で統合し、運用効率を高める。",
+        "オフィスのPCを社内LANに接続し、ファイルを共有する。",
+        "スマートフォンのアプリストアから、動画配信サービスを利用する。",
+        "センサを内蔵した農業機械がインターネットに接続し、収集した生育データを自動で送信する。",
+        "データセンター内のサーバ群を仮想化技術で統合し、運用効率を高める。",
       ],
       answerIndex: 2,
       explanation:
@@ -303,12 +303,17 @@
   /* ------------------------------------------------------------
      State
      ------------------------------------------------------------ */
+  const CHOICE_LABELS = ["ア", "イ", "ウ", "エ"];
+
   const state = {
     screen: "terms", // "terms" | "quiz" | "result"
     order: [],
     cursor: 0,
     score: 0,
     answered: false,
+    // 現在の問題の選択肢をシャッフルした結果。
+    // 各要素は { origIndex, text, isAnswer } を保持する。
+    displayChoices: [],
   };
 
   /* ------------------------------------------------------------
@@ -369,16 +374,31 @@
     $("#quiz-question").textContent = q.question;
     $("#quiz-year").textContent = q.year + " 出題";
 
+    // 選択肢の表示順をシャッフルし、ア/イ/ウ/エ を再割当てする
+    const shuffledIndices = shuffle(
+      q.choices.map(function (_, i) {
+        return i;
+      })
+    );
+    state.displayChoices = shuffledIndices.map(function (origIndex) {
+      return {
+        origIndex: origIndex,
+        text: q.choices[origIndex],
+        isAnswer: origIndex === q.answerIndex,
+      };
+    });
+
     const choicesNode = $("#quiz-choices");
     clear(choicesNode);
 
-    q.choices.forEach(function (text, i) {
+    state.displayChoices.forEach(function (choice, displayIndex) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "choice";
-      btn.textContent = text;
+      const label = CHOICE_LABELS[displayIndex] || "";
+      btn.textContent = label + "  " + choice.text;
       btn.addEventListener("click", function () {
-        handleAnswer(i);
+        handleAnswer(displayIndex);
       });
       choicesNode.appendChild(btn);
     });
@@ -396,20 +416,22 @@
     state.answered = false;
   }
 
-  function handleAnswer(selectedIndex) {
+  function handleAnswer(selectedDisplayIndex) {
     if (state.answered) return;
     state.answered = true;
 
     const q = currentQuestion();
-    const isCorrect = selectedIndex === q.answerIndex;
+    const selected = state.displayChoices[selectedDisplayIndex];
+    const isCorrect = selected.isAnswer;
     if (isCorrect) state.score += 1;
 
     const buttons = document.querySelectorAll("#quiz-choices .choice");
     buttons.forEach(function (btn, i) {
       btn.disabled = true;
-      if (i === q.answerIndex) {
+      const choice = state.displayChoices[i];
+      if (choice.isAnswer) {
         btn.classList.add("is-correct");
-      } else if (i === selectedIndex) {
+      } else if (i === selectedDisplayIndex) {
         btn.classList.add("is-wrong");
       } else {
         btn.classList.add("is-dimmed");
@@ -458,7 +480,20 @@
     $("#screen-terms").hidden = name !== "terms";
     $("#screen-quiz").hidden = name !== "quiz";
     $("#screen-result").hidden = name !== "result";
+    updateNavActive(name);
     window.scrollTo(0, 0);
+  }
+
+  function updateNavActive(name) {
+    const termsBtn = $("#nav-terms-btn");
+    const quizBtn = $("#nav-quiz-btn");
+    if (!termsBtn || !quizBtn) return;
+    termsBtn.classList.toggle("is-active", name === "terms");
+    quizBtn.classList.toggle("is-active", name === "quiz" || name === "result");
+  }
+
+  function goToTerms() {
+    showScreen("terms");
   }
 
   function startQuiz() {
@@ -483,9 +518,8 @@
     }
   }
 
-  function restart() {
-    showScreen("terms");
-    window.scrollTo(0, 0);
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   /* ------------------------------------------------------------
@@ -493,9 +527,23 @@
      ------------------------------------------------------------ */
   function init() {
     renderTerms();
+
+    // 画面内ボタン
     $("#start-btn").addEventListener("click", startQuiz);
     $("#next-btn").addEventListener("click", nextQuestion);
-    $("#restart-btn").addEventListener("click", restart);
+    $("#restart-btn").addEventListener("click", startQuiz);
+    $("#back-to-terms-btn").addEventListener("click", goToTerms);
+    $("#quiz-back-btn").addEventListener("click", goToTerms);
+
+    // 共通ヘッダー
+    $("#home-btn").addEventListener("click", goToTerms);
+    $("#nav-terms-btn").addEventListener("click", goToTerms);
+    $("#nav-quiz-btn").addEventListener("click", startQuiz);
+
+    // 共通フッター
+    $("#footer-terms-btn").addEventListener("click", goToTerms);
+    $("#to-top-btn").addEventListener("click", scrollToTop);
+
     showScreen("terms");
   }
 

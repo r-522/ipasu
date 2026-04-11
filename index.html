@@ -13,6 +13,22 @@
     <script src="app.js" defer></script>
   </head>
   <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <button id="home-btn" type="button" class="site-title">
+          IT Passport
+        </button>
+        <nav class="site-nav" aria-label="主要ナビゲーション">
+          <button id="nav-terms-btn" type="button" class="nav-link">
+            用語集
+          </button>
+          <button id="nav-quiz-btn" type="button" class="nav-link">
+            クイズ
+          </button>
+        </nav>
+      </div>
+    </header>
+
     <main>
       <!-- 用語一覧画面 -->
       <section id="screen-terms" class="screen">
@@ -35,6 +51,10 @@
 
       <!-- クイズ画面 -->
       <section id="screen-quiz" class="screen" hidden>
+        <button id="quiz-back-btn" type="button" class="back-link">
+          ← 用語集に戻る
+        </button>
+
         <header class="quiz-header">
           <p class="eyebrow" id="quiz-category">テクノロジ</p>
           <p class="progress" id="quiz-progress">1 / 10</p>
@@ -72,16 +92,29 @@
           <p id="result-message" class="lede"></p>
         </div>
 
-        <div class="actions">
+        <div class="actions actions-row">
           <button id="restart-btn" type="button" class="btn-primary">
             もう一度
+          </button>
+          <button id="back-to-terms-btn" type="button" class="btn-ghost">
+            用語集に戻る
           </button>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p>ITパスポート 学習</p>
+      <div class="site-footer-inner">
+        <p>ITパスポート 学習</p>
+        <div class="footer-nav">
+          <button id="footer-terms-btn" type="button" class="footer-link">
+            用語集
+          </button>
+          <button id="to-top-btn" type="button" class="footer-link">
+            ↑ 上部へ
+          </button>
+        </div>
+      </div>
     </footer>
   </body>
 </html>
