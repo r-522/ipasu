@@ -1,0 +1,353 @@
+/* ============================================================
+   ITパスポート 学習  —  モノクローム ミニマリズム
+   ============================================================ */
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --line: #e5e5e5;
+  --line-strong: #0a0a0a;
+  --text: #0a0a0a;
+  --text-mute: #6b6b6b;
+  --text-faint: #a0a0a0;
+  --correct: #1f6b3a;
+  --wrong: #8a1f1f;
+  --hover: #1f1f1f;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo",
+    system-ui, sans-serif;
+  font-feature-settings: "palt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+}
+
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 96px 24px 64px;
+}
+
+.screen {
+  display: block;
+}
+
+.screen[hidden] {
+  display: none;
+}
+
+/* --- Typography ------------------------------------------------ */
+
+.eyebrow {
+  margin: 0 0 20px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+
+h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.5;
+}
+
+.lede {
+  margin: 20px 0 0;
+  max-width: 52ch;
+  color: var(--text-mute);
+  font-size: 15px;
+}
+
+.caption {
+  margin: 8px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+}
+
+.page-header {
+  margin-bottom: 56px;
+}
+
+/* --- Terms list ------------------------------------------------ */
+
+.terms {
+  margin: 0 0 56px;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.terms > div {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 24px;
+  align-items: baseline;
+}
+
+.terms dt {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+
+.terms dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-mute);
+}
+
+@media (max-width: 560px) {
+  .terms > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 18px 0;
+  }
+
+  main {
+    padding: 64px 20px 48px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+}
+
+/* --- Buttons --------------------------------------------------- */
+
+.actions {
+  margin-top: 48px;
+  display: flex;
+}
+
+.btn-primary {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--text);
+  background: var(--text);
+  color: #ffffff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 14px 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 120ms linear, border-color 120ms linear,
+    color 120ms linear;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--hover);
+  border-color: var(--hover);
+}
+
+.btn-primary:disabled {
+  background: transparent;
+  color: var(--text-faint);
+  border-color: var(--line);
+  cursor: default;
+}
+
+.btn-primary:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* --- Quiz screen ----------------------------------------------- */
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+
+.quiz-header .eyebrow {
+  margin: 0;
+}
+
+.progress {
+  margin: 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  color: var(--text-mute);
+}
+
+.question {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* --- Choices --------------------------------------------------- */
+
+.choices {
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.choice {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.6;
+  text-align: left;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 120ms linear, color 120ms linear,
+    background-color 120ms linear;
+}
+
+.choice:hover:not(:disabled) {
+  border-color: var(--text);
+}
+
+.choice:focus-visible {
+  outline: 1px solid var(--text);
+  outline-offset: 2px;
+}
+
+.choice:disabled {
+  cursor: default;
+}
+
+.choice.is-correct {
+  border-color: var(--correct);
+  color: var(--correct);
+}
+
+.choice.is-wrong {
+  border-color: var(--wrong);
+  color: var(--wrong);
+}
+
+.choice.is-dimmed {
+  color: var(--text-faint);
+  border-color: var(--line);
+}
+
+/* --- Feedback -------------------------------------------------- */
+
+.feedback {
+  margin-top: 32px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.feedback[hidden] {
+  display: none;
+}
+
+.feedback-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.feedback-label.is-correct {
+  color: var(--correct);
+}
+
+.feedback-label.is-wrong {
+  color: var(--wrong);
+}
+
+.feedback-body {
+  margin: 0;
+  color: var(--text-mute);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* --- Result screen --------------------------------------------- */
+
+.result {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 48px 0;
+  text-align: left;
+}
+
+.result-score {
+  margin: 0;
+  font-size: 72px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-total {
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text-mute);
+  letter-spacing: 0;
+}
+
+.result .lede {
+  margin-top: 24px;
+}
+
+/* --- Footer ---------------------------------------------------- */
+
+.site-footer {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+}
+
+.site-footer p {
+  margin: 0;
+}
