@@ -40,6 +40,34 @@
           </p>
         </header>
 
+        <div class="terms-controls">
+          <input
+            type="text"
+            id="terms-search"
+            class="terms-search"
+            placeholder="用語を検索（例: SQL、えす、エス）"
+          />
+          <div class="terms-filters">
+            <button class="filter-btn is-active" data-category="all">
+              すべて
+            </button>
+            <button class="filter-btn" data-category="ストラテジ">
+              ストラテジ
+            </button>
+            <button class="filter-btn" data-category="マネジメント">
+              マネジメント
+            </button>
+            <button class="filter-btn" data-category="テクノロジ">
+              テクノロジ
+            </button>
+          </div>
+          <div class="terms-sort">
+            <button id="terms-sort-btn" class="sort-btn">
+              名前順 ▼
+            </button>
+          </div>
+        </div>
+
         <dl id="terms-list" class="terms"></dl>
 
         <div class="actions">
