@@ -3345,6 +3345,10 @@
     // 現在の問題の選択肢をシャッフルした結果。
     // 各要素は { origIndex, text, isAnswer } を保持する。
     displayChoices: [],
+    // 用語検索・フィルタ・ソート状態
+    termsSearchQuery: "",
+    termsCategoryFilter: "all",
+    termsSortAscending: true,
   };
 
   /* ------------------------------------------------------------
@@ -3372,11 +3376,100 @@
   /* ------------------------------------------------------------
      用語画面の描画
      ------------------------------------------------------------ */
+  function normalizeString(str) {
+    // 大文字小文字を統一、カタカナをひらがなに変換
+    return str
+      .toLowerCase()
+      .replace(/ァ/g, "ぁ")
+      .replace(/ィ/g, "ぃ")
+      .replace(/ゥ/g, "ぅ")
+      .replace(/ェ/g, "ぇ")
+      .replace(/ォ/g, "ぉ")
+      .replace(/ア/g, "あ")
+      .replace(/イ/g, "い")
+      .replace(/ウ/g, "う")
+      .replace(/エ/g, "え")
+      .replace(/オ/g, "お")
+      .replace(/カ/g, "か")
+      .replace(/キ/g, "き")
+      .replace(/ク/g, "く")
+      .replace(/ケ/g, "け")
+      .replace(/コ/g, "こ")
+      .replace(/サ/g, "さ")
+      .replace(/シ/g, "し")
+      .replace(/ス/g, "す")
+      .replace(/セ/g, "せ")
+      .replace(/ソ/g, "そ")
+      .replace(/タ/g, "た")
+      .replace(/チ/g, "ち")
+      .replace(/ツ/g, "つ")
+      .replace(/テ/g, "て")
+      .replace(/ト/g, "と")
+      .replace(/ナ/g, "な")
+      .replace(/ニ/g, "に")
+      .replace(/ヌ/g, "ぬ")
+      .replace(/ネ/g, "ね")
+      .replace(/ノ/g, "の")
+      .replace(/ハ/g, "は")
+      .replace(/ヒ/g, "ひ")
+      .replace(/フ/g, "ふ")
+      .replace(/ヘ/g, "へ")
+      .replace(/ホ/g, "ほ")
+      .replace(/マ/g, "ま")
+      .replace(/ミ/g, "み")
+      .replace(/ム/g, "む")
+      .replace(/メ/g, "め")
+      .replace(/モ/g, "も")
+      .replace(/ヤ/g, "や")
+      .replace(/ユ/g, "ゆ")
+      .replace(/ヨ/g, "よ")
+      .replace(/ラ/g, "ら")
+      .replace(/リ/g, "り")
+      .replace(/ル/g, "る")
+      .replace(/レ/g, "れ")
+      .replace(/ロ/g, "ろ")
+      .replace(/ワ/g, "わ")
+      .replace(/ン/g, "ん");
+  }
+
   function renderTerms() {
     const list = $("#terms-list");
     clear(list);
 
-    TERMS.forEach(function (item) {
+    // フィルタリング処理
+    const query = normalizeString(state.termsSearchQuery);
+    const filtered = TERMS.filter(function (item) {
+      // カテゴリフィルタ
+      if (
+        state.termsCategoryFilter !== "all" &&
+        item.category !== state.termsCategoryFilter
+      ) {
+        return false;
+      }
+      // 検索フィルタ
+      if (query) {
+        const termNormalized = normalizeString(item.term);
+        const descNormalized = normalizeString(item.description);
+        return (
+          termNormalized.includes(query) || descNormalized.includes(query)
+        );
+      }
+      return true;
+    });
+
+    // ソート処理
+    filtered.sort(function (a, b) {
+      const aName = a.term;
+      const bName = b.term;
+      if (state.termsSortAscending) {
+        return aName.localeCompare(bName, "ja");
+      } else {
+        return bName.localeCompare(aName, "ja");
+      }
+    });
+
+    // 描画
+    filtered.forEach(function (item) {
       const row = document.createElement("div");
       const dt = document.createElement("dt");
       const dd = document.createElement("dd");
@@ -3386,6 +3479,16 @@
       row.appendChild(dd);
       list.appendChild(row);
     });
+
+    // 結果数の表示
+    const resultCount = filtered.length;
+    const totalCount = TERMS.length;
+    if (resultCount === 0) {
+      const noResults = document.createElement("p");
+      noResults.className = "no-results";
+      noResults.textContent = "該当する用語がありません";
+      list.appendChild(noResults);
+    }
   }
 
   /* ------------------------------------------------------------
@@ -3524,6 +3627,27 @@
   }
 
   function goToTerms() {
+    // 検索・フィルタ・ソートをリセット
+    state.termsSearchQuery = "";
+    state.termsCategoryFilter = "all";
+    state.termsSortAscending = true;
+
+    // UI をリセット
+    const searchInput = $("#terms-search");
+    if (searchInput) searchInput.value = "";
+
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    filterBtns.forEach(function (btn) {
+      btn.classList.remove("is-active");
+      if (btn.getAttribute("data-category") === "all") {
+        btn.classList.add("is-active");
+      }
+    });
+
+    const sortBtn = $("#terms-sort-btn");
+    if (sortBtn) sortBtn.textContent = "名前順 ▼";
+
+    renderTerms();
     showScreen("terms");
   }
 
@@ -3558,6 +3682,39 @@
      ------------------------------------------------------------ */
   function init() {
     renderTerms();
+
+    // 用語検索イベントリスナー
+    const searchInput = $("#terms-search");
+    if (searchInput) {
+      searchInput.addEventListener("input", function (e) {
+        state.termsSearchQuery = e.target.value;
+        renderTerms();
+      });
+    }
+
+    // カテゴリフィルタボタン
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    filterBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.termsCategoryFilter = btn.getAttribute("data-category");
+        filterBtns.forEach(function (b) {
+          b.classList.remove("is-active");
+        });
+        btn.classList.add("is-active");
+        renderTerms();
+      });
+    });
+
+    // ソートボタン
+    const sortBtn = $("#terms-sort-btn");
+    if (sortBtn) {
+      sortBtn.addEventListener("click", function () {
+        state.termsSortAscending = !state.termsSortAscending;
+        const direction = state.termsSortAscending ? "▼" : "▲";
+        sortBtn.textContent = "名前順 " + direction;
+        renderTerms();
+      });
+    }
 
     // 画面内ボタン
     $("#start-btn").addEventListener("click", startQuiz);
