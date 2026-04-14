@@ -25,6 +25,9 @@
           <button id="nav-quiz-btn" type="button" class="nav-link">
             クイズ
           </button>
+          <button id="nav-radix-btn" type="button" class="nav-link">
+            基数変換
+          </button>
         </nav>
       </div>
     </header>
@@ -101,6 +104,62 @@
         <div class="actions">
           <button id="next-btn" type="button" class="btn-primary" disabled>
             次へ
+          </button>
+        </div>
+      </section>
+
+      <!-- 基数変換クイズ画面 -->
+      <section id="screen-radix-quiz" class="screen" hidden>
+        <button id="radix-quiz-back-btn" type="button" class="back-link">
+          ← 戻る
+        </button>
+
+        <header class="page-header">
+          <p class="eyebrow">基数変換クイズ</p>
+          <h1 id="radix-direction"></h1>
+        </header>
+
+        <div class="radix-quiz-content">
+          <div class="radix-number-display">
+            <p class="radix-label">数字:</p>
+            <div id="radix-digits" class="radix-digits"></div>
+          </div>
+
+          <div id="radix-feedback-area" class="radix-feedback-area" hidden>
+            <div id="radix-calculation" class="radix-calculation"></div>
+          </div>
+
+          <div class="radix-input-area">
+            <label for="radix-answer-input">答え（10進数）:</label>
+            <input
+              type="text"
+              id="radix-answer-input"
+              class="radix-answer-input"
+              placeholder="数値を入力"
+              inputmode="numeric"
+            />
+          </div>
+
+          <div class="radix-result-message" id="radix-result-message" hidden>
+            <p id="radix-result-text"></p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button
+            id="radix-answer-btn"
+            type="button"
+            class="btn-primary"
+          >
+            回答する
+          </button>
+          <button
+            id="radix-next-btn"
+            type="button"
+            class="btn-primary"
+            hidden
+          >
+            もう一問
           </button>
         </div>
       </section>

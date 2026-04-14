@@ -4088,7 +4088,7 @@
   const CHOICE_LABELS = ["ア", "イ", "ウ", "エ"];
 
   const state = {
-    screen: "terms", // "terms" | "quiz" | "result"
+    screen: "terms", // "terms" | "quiz" | "result" | "radix-quiz"
     order: [],
     cursor: 0,
     score: 0,
@@ -4100,6 +4100,17 @@
     termsSearchQuery: "",
     termsCategoryFilter: "all",
     termsSortAscending: true,
+    // 基数変換クイズ状態
+    radixQuiz: {
+      fromRadix: 2,
+      toRadix: 10,
+      sourceNumber: 0,
+      sourceRadixString: "",
+      expectedAnswer: 0,
+      answered: false,
+      isCorrect: null,
+      userInput: "",
+    },
   };
 
   /* ------------------------------------------------------------
@@ -4365,6 +4376,7 @@
     $("#screen-terms").hidden = name !== "terms";
     $("#screen-quiz").hidden = name !== "quiz";
     $("#screen-result").hidden = name !== "result";
+    $("#screen-radix-quiz").hidden = name !== "radix-quiz";
     updateNavActive(name);
     window.scrollTo(0, 0);
   }
@@ -4372,9 +4384,13 @@
   function updateNavActive(name) {
     const termsBtn = $("#nav-terms-btn");
     const quizBtn = $("#nav-quiz-btn");
+    const radixBtn = $("#nav-radix-btn");
     if (!termsBtn || !quizBtn) return;
     termsBtn.classList.toggle("is-active", name === "terms");
     quizBtn.classList.toggle("is-active", name === "quiz" || name === "result");
+    if (radixBtn) {
+      radixBtn.classList.toggle("is-active", name === "radix-quiz");
+    }
   }
 
   function goToTerms() {
@@ -4428,6 +4444,174 @@
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
+  /* Radix Conversion Logic */
+  function convertBase(num, fromRadix, toRadix) {
+    // まず10進に変換
+    var decimal = parseInt(String(num), fromRadix);
+    if (isNaN(decimal)) return null;
+    // その後、目標基数に変換
+    return toRadix === 10 ? decimal : decimal.toString(toRadix).toUpperCase();
+  }
+
+  function generateRandomRadixProblem() {
+    var directions = [
+      { from: 2, to: 10 },
+      { from: 2, to: 16 },
+      { from: 10, to: 2 },
+      { from: 10, to: 16 },
+      { from: 16, to: 2 },
+      { from: 16, to: 10 },
+    ];
+    var direction = directions[Math.floor(Math.random() * directions.length)];
+
+    var sourceNumber;
+    if (direction.from === 2) {
+      // 2進: 1～8ビット
+      sourceNumber = Math.floor(Math.random() * 256) + 1;
+    } else if (direction.from === 10) {
+      // 10進: 1～255
+      sourceNumber = Math.floor(Math.random() * 255) + 1;
+    } else {
+      // 16進: 1～FF
+      sourceNumber = Math.floor(Math.random() * 255) + 1;
+    }
+
+    var sourceRadixString = sourceNumber.toString(direction.from).toUpperCase();
+    var expectedAnswer = parseInt(sourceRadixString, direction.from);
+
+    return {
+      fromRadix: direction.from,
+      toRadix: direction.to,
+      sourceNumber: sourceNumber,
+      sourceRadixString: sourceRadixString,
+      expectedAnswer: expectedAnswer,
+    };
+  }
+
+  function getRadixWeights(numString, radix) {
+    var weights = [];
+    for (var i = 0; i < numString.length; i++) {
+      var exponent = numString.length - 1 - i;
+      weights.push(Math.pow(radix, exponent));
+    }
+    return weights;
+  }
+
+  function formatRadixCalculation(sourceRadixString, fromRadix, result) {
+    var weights = getRadixWeights(sourceRadixString, fromRadix);
+    var parts = [];
+
+    for (var i = 0; i < sourceRadixString.length; i++) {
+      var digit = sourceRadixString[i];
+      var weight = weights[i];
+      var product = parseInt(digit, fromRadix) * weight;
+      parts.push(digit + " × " + weight);
+    }
+
+    var calculation = parts.join(" + ");
+    return calculation + " = " + result;
+  }
+
+  function startRadixQuiz() {
+    var problem = generateRandomRadixProblem();
+    state.radixQuiz = {
+      fromRadix: problem.fromRadix,
+      toRadix: problem.toRadix,
+      sourceNumber: problem.sourceNumber,
+      sourceRadixString: problem.sourceRadixString,
+      expectedAnswer: problem.expectedAnswer,
+      answered: false,
+      isCorrect: null,
+      userInput: "",
+    };
+    showScreen("radix-quiz");
+    renderRadixQuiz();
+  }
+
+  function renderRadixQuiz() {
+    var radix = state.radixQuiz;
+    var radixNames = { 2: "2進", 10: "10進", 16: "16進" };
+    var directionText =
+      radixNames[radix.fromRadix] + " → " + radixNames[radix.toRadix];
+
+    $("#radix-direction").textContent = directionText;
+
+    // 数字の表示
+    var digitsContainer = $("#radix-digits");
+    digitsContainer.textContent = "";
+    var digits = radix.sourceRadixString.split("");
+    digits.forEach(function (digit) {
+      var span = document.createElement("span");
+      span.className = "radix-digit";
+      span.textContent = digit;
+      digitsContainer.appendChild(span);
+    });
+
+    // フィードバック非表示
+    $("#radix-feedback-area").hidden = true;
+    $("#radix-result-message").hidden = true;
+
+    // 入力フィールドクリア
+    var input = $("#radix-answer-input");
+    input.value = "";
+    input.disabled = false;
+
+    // ボタン状態
+    $("#radix-answer-btn").hidden = false;
+    $("#radix-next-btn").hidden = true;
+  }
+
+  function handleRadixAnswer() {
+    var radix = state.radixQuiz;
+    var userInput = $("#radix-answer-input").value.trim();
+
+    if (!userInput) {
+      alert("数値を入力してください");
+      return;
+    }
+
+    var userAnswer = parseInt(userInput, 10);
+    if (isNaN(userAnswer) || userAnswer < 0) {
+      alert("有効な数値を入力してください");
+      return;
+    }
+
+    // 判定
+    var isCorrect = userAnswer === radix.expectedAnswer;
+
+    // フィードバック表示
+    var radixNames = { 2: "2進", 10: "10進", 16: "16進" };
+    var calculation = formatRadixCalculation(
+      radix.sourceRadixString,
+      radix.fromRadix,
+      radix.expectedAnswer
+    );
+
+    $("#radix-calculation").innerHTML =
+      "<strong>考え方:</strong><br>" +
+      "各桁の重みを計算:<br>" +
+      calculation;
+
+    var resultMessage = "";
+    if (isCorrect) {
+      resultMessage = "✓ 正解です！";
+    } else {
+      resultMessage = "✗ 不正解です。正解は " + radix.expectedAnswer + " です。";
+    }
+
+    $("#radix-result-text").textContent = resultMessage;
+
+    // UI更新
+    $("#radix-feedback-area").hidden = false;
+    $("#radix-result-message").hidden = false;
+    $("#radix-answer-input").disabled = true;
+    $("#radix-answer-btn").hidden = true;
+    $("#radix-next-btn").hidden = false;
+
+    radix.answered = true;
+    radix.isCorrect = isCorrect;
+  }
+
   /* ------------------------------------------------------------
      Init
      ------------------------------------------------------------ */
@@ -4474,10 +4658,25 @@
     $("#back-to-terms-btn").addEventListener("click", goToTerms);
     $("#quiz-back-btn").addEventListener("click", goToTerms);
 
+    // 基数変換クイズボタン
+    var radixAnswerBtn = $("#radix-answer-btn");
+    if (radixAnswerBtn) {
+      radixAnswerBtn.addEventListener("click", handleRadixAnswer);
+    }
+    var radixNextBtn = $("#radix-next-btn");
+    if (radixNextBtn) {
+      radixNextBtn.addEventListener("click", startRadixQuiz);
+    }
+    var radixBackBtn = $("#radix-quiz-back-btn");
+    if (radixBackBtn) {
+      radixBackBtn.addEventListener("click", goToTerms);
+    }
+
     // 共通ヘッダー
     $("#home-btn").addEventListener("click", goToTerms);
     $("#nav-terms-btn").addEventListener("click", goToTerms);
     $("#nav-quiz-btn").addEventListener("click", startQuiz);
+    $("#nav-radix-btn").addEventListener("click", startRadixQuiz);
 
     // 共通フッター
     $("#footer-terms-btn").addEventListener("click", goToTerms);
