@@ -4497,7 +4497,7 @@
     return weights;
   }
 
-  function formatRadixCalculation(sourceRadixString, fromRadix, toRadix, result) {
+  function formatRadixCalculation(sourceRadixString, fromRadix, result) {
     var weights = getRadixWeights(sourceRadixString, fromRadix);
     var parts = [];
 
