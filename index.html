@@ -129,8 +129,18 @@
             <div id="radix-calculation" class="radix-calculation"></div>
           </div>
 
+          <div class="radix-scratch-wrapper">
+            <label for="radix-scratch-area" class="radix-label">メモ:</label>
+            <textarea
+              id="radix-scratch-area"
+              class="radix-scratch-area"
+              placeholder="計算過程などを自由に書けます"
+              rows="5"
+            ></textarea>
+          </div>
+
           <div class="radix-input-area">
-            <label for="radix-answer-input">答え（10進数）:</label>
+            <label id="radix-answer-label" for="radix-answer-input">答え（10進数）:</label>
             <input
               type="text"
               id="radix-answer-input"

@@ -4477,14 +4477,20 @@
     }
 
     var sourceRadixString = sourceNumber.toString(direction.from).toUpperCase();
-    var expectedAnswer = parseInt(sourceRadixString, direction.from);
+    var decimalValue = parseInt(sourceRadixString, direction.from);
+    var expectedAnswerString =
+      direction.to === 10
+        ? String(decimalValue)
+        : decimalValue.toString(direction.to).toUpperCase();
 
     return {
       fromRadix: direction.from,
       toRadix: direction.to,
       sourceNumber: sourceNumber,
       sourceRadixString: sourceRadixString,
-      expectedAnswer: expectedAnswer,
+      decimalValue: decimalValue,
+      expectedAnswer: decimalValue,
+      expectedAnswerString: expectedAnswerString,
     };
   }
 
@@ -4497,19 +4503,128 @@
     return weights;
   }
 
-  function formatRadixCalculation(sourceRadixString, fromRadix, result) {
+  var HEX_CHARS = "0123456789ABCDEF";
+
+  // X進 → 10進: 重みを使った計算法
+  function formatWeightMethod(sourceRadixString, fromRadix, decimalValue) {
     var weights = getRadixWeights(sourceRadixString, fromRadix);
     var parts = [];
-
     for (var i = 0; i < sourceRadixString.length; i++) {
-      var digit = sourceRadixString[i];
-      var weight = weights[i];
-      var product = parseInt(digit, fromRadix) * weight;
-      parts.push(digit + " × " + weight);
+      parts.push(sourceRadixString[i] + " × " + weights[i]);
     }
+    return parts.join(" + ") + " = " + decimalValue;
+  }
 
-    var calculation = parts.join(" + ");
-    return calculation + " = " + result;
+  // 10進 → X進: 割り算法
+  function formatDivisionMethod(decimalValue, toRadix) {
+    var steps = [];
+    var n = decimalValue;
+    while (n > 0) {
+      var quotient = Math.floor(n / toRadix);
+      var remainder = n % toRadix;
+      var remStr =
+        remainder >= 10
+          ? remainder + " (" + HEX_CHARS[remainder] + ")"
+          : String(remainder);
+      steps.push({ n: n, quotient: quotient, remStr: remStr, remDigit: HEX_CHARS[remainder] });
+      n = quotient;
+    }
+    var maxNLen = String(decimalValue).length;
+    var lines = [];
+    for (var i = 0; i < steps.length; i++) {
+      var nPadded = String(steps[i].n);
+      while (nPadded.length < maxNLen) nPadded = " " + nPadded;
+      lines.push(nPadded + " ÷ " + toRadix + " = " + steps[i].quotient + "  余り " + steps[i].remStr);
+    }
+    var digits = [];
+    for (var j = steps.length - 1; j >= 0; j--) {
+      digits.push(steps[j].remDigit);
+    }
+    lines.push("余りを下から読む → " + digits.join(""));
+    return lines.join("\n");
+  }
+
+  // 2進 → 16進: 4ビットグループ化法
+  function formatGroupingMethod(sourceRadixString, expectedAnswerString) {
+    var padded = sourceRadixString;
+    while (padded.length % 4 !== 0) padded = "0" + padded;
+    var groups = [];
+    for (var i = 0; i < padded.length; i += 4) {
+      groups.push(padded.substring(i, i + 4));
+    }
+    var hexDigits = groups.map(function (g) {
+      return parseInt(g, 2).toString(16).toUpperCase();
+    });
+    var groupLine = groups.map(function (g) { return "[" + g + "]"; }).join(" ");
+    var hexLine = hexDigits.map(function (h) { return "  " + h + "  "; }).join(" ");
+    return (
+      "4ビットずつグループに分ける:\n" +
+      groupLine + "\n" +
+      hexLine + "\n" +
+      "→ " + expectedAnswerString
+    );
+  }
+
+  // 16進 → 2進: 各桁を4ビットに展開
+  function formatExpansionMethod(sourceRadixString, expectedAnswerString) {
+    var hexDigits = sourceRadixString.split("");
+    var binGroups = hexDigits.map(function (h) {
+      return parseInt(h, 16).toString(2).padStart(4, "0");
+    });
+    var digitLine = hexDigits.join("    ");
+    var arrowLine = hexDigits.map(function () { return "↓"; }).join("    ");
+    var binLine = binGroups.join(" ");
+    return (
+      "各16進数字を4ビットに展開:\n" +
+      digitLine + "\n" +
+      arrowLine + "\n" +
+      binLine + "\n" +
+      "→ " + expectedAnswerString
+    );
+  }
+
+  // 変換方向に応じた考え方を返す
+  function formatRadixCalculationForPair(
+    fromRadix, toRadix, sourceRadixString, decimalValue, expectedAnswerString
+  ) {
+    if (toRadix === 10) {
+      return "各桁の重みを計算:\n" + formatWeightMethod(sourceRadixString, fromRadix, decimalValue);
+    } else if (fromRadix === 10) {
+      return toRadix + "で割り続ける:\n" + formatDivisionMethod(decimalValue, toRadix);
+    } else if (fromRadix === 2 && toRadix === 16) {
+      return formatGroupingMethod(sourceRadixString, expectedAnswerString);
+    } else if (fromRadix === 16 && toRadix === 2) {
+      return formatExpansionMethod(sourceRadixString, expectedAnswerString);
+    }
+    return "";
+  }
+
+  // 別解（2進↔16進のみ）
+  function formatAlternativeSolution(
+    fromRadix, toRadix, sourceRadixString, decimalValue, expectedAnswerString
+  ) {
+    if (fromRadix === 2 && toRadix === 16) {
+      var step1 = formatWeightMethod(sourceRadixString, 2, decimalValue);
+      var step2 = formatDivisionMethod(decimalValue, 16);
+      return (
+        "一旦10進数に変換する方法:\n" +
+        "① 重みで10進数に変換:\n" +
+        step1 + "\n\n" +
+        "② " + decimalValue + "を16で割り続ける:\n" +
+        step2
+      );
+    } else if (fromRadix === 16 && toRadix === 2) {
+      var step1a = formatWeightMethod(sourceRadixString, 16, decimalValue);
+      var step2a = formatDivisionMethod(decimalValue, 2);
+      return (
+        "一旦10進数に変換する方法:\n" +
+        "① 重みで10進数に変換:\n" +
+        step1a + "\n\n" +
+        "② " + decimalValue + "を2で割り続ける:\n" +
+        step2a
+      );
+    }
+    return "";
   }
 
   function startRadixQuiz() {
@@ -4519,7 +4634,9 @@
       toRadix: problem.toRadix,
       sourceNumber: problem.sourceNumber,
       sourceRadixString: problem.sourceRadixString,
+      decimalValue: problem.decimalValue,
       expectedAnswer: problem.expectedAnswer,
+      expectedAnswerString: problem.expectedAnswerString,
       answered: false,
       isCorrect: null,
       userInput: "",
@@ -4551,55 +4668,119 @@
     $("#radix-feedback-area").hidden = true;
     $("#radix-result-message").hidden = true;
 
+    // ラベルと入力モードを目標基数に合わせて更新
+    var radixLabelNames = { 2: "2進数", 10: "10進数", 16: "16進数" };
+    var answerLabel = $("#radix-answer-label");
+    if (answerLabel) {
+      answerLabel.textContent = "答え（" + radixLabelNames[radix.toRadix] + "）:";
+    }
+
     // 入力フィールドクリア
     var input = $("#radix-answer-input");
     input.value = "";
     input.disabled = false;
+    if (radix.toRadix === 10) {
+      input.setAttribute("inputmode", "numeric");
+      input.placeholder = "数値を入力";
+    } else if (radix.toRadix === 2) {
+      input.setAttribute("inputmode", "text");
+      input.placeholder = "2進数で入力（例: 1010）";
+    } else {
+      input.setAttribute("inputmode", "text");
+      input.placeholder = "16進数で入力（例: A3）";
+    }
+
+    // メモ欄クリア
+    var scratch = $("#radix-scratch-area");
+    if (scratch) scratch.value = "";
 
     // ボタン状態
     $("#radix-answer-btn").hidden = false;
     $("#radix-next-btn").hidden = true;
   }
 
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
   function handleRadixAnswer() {
     var radix = state.radixQuiz;
-    var userInput = $("#radix-answer-input").value.trim();
+    var userInput = $("#radix-answer-input").value.trim().toUpperCase();
 
     if (!userInput) {
       alert("数値を入力してください");
       return;
     }
 
-    var userAnswer = parseInt(userInput, 10);
-    if (isNaN(userAnswer) || userAnswer < 0) {
-      alert("有効な数値を入力してください");
-      return;
+    // 入力を目標基数に応じてバリデーション＆10進数に変換
+    var userDecimal;
+    if (radix.toRadix === 10) {
+      if (!/^\d+$/.test(userInput)) {
+        alert("有効な数値を入力してください");
+        return;
+      }
+      userDecimal = parseInt(userInput, 10);
+    } else if (radix.toRadix === 2) {
+      if (!/^[01]+$/.test(userInput)) {
+        alert("2進数（0と1のみ）で入力してください");
+        return;
+      }
+      userDecimal = parseInt(userInput, 2);
+    } else {
+      if (!/^[0-9A-F]+$/.test(userInput)) {
+        alert("16進数（0〜9, A〜F）で入力してください");
+        return;
+      }
+      userDecimal = parseInt(userInput, 16);
     }
 
-    // 判定
-    var isCorrect = userAnswer === radix.expectedAnswer;
+    // 判定（10進数で比較）
+    var isCorrect = userDecimal === radix.expectedAnswer;
 
-    // フィードバック表示
-    var radixNames = { 2: "2進", 10: "10進", 16: "16進" };
-    var calculation = formatRadixCalculation(
-      radix.sourceRadixString,
+    // 考え方を生成
+    var calcText = formatRadixCalculationForPair(
       radix.fromRadix,
-      radix.expectedAnswer
+      radix.toRadix,
+      radix.sourceRadixString,
+      radix.decimalValue,
+      radix.expectedAnswerString
     );
 
-    $("#radix-calculation").innerHTML =
+    var html =
       "<strong>考え方:</strong><br>" +
-      "各桁の重みを計算:<br>" +
-      calculation;
+      escapeHtml(calcText).replace(/\n/g, "<br>");
+
+    // 別解（2進↔16進のみ）
+    var altText = formatAlternativeSolution(
+      radix.fromRadix,
+      radix.toRadix,
+      radix.sourceRadixString,
+      radix.decimalValue,
+      radix.expectedAnswerString
+    );
+    if (altText) {
+      html +=
+        "<br><br><strong>別解:</strong><br>" +
+        escapeHtml(altText).replace(/\n/g, "<br>");
+    }
+
+    $("#radix-calculation").innerHTML = html;
 
     var resultMessage = "";
     if (isCorrect) {
       resultMessage = "✓ 正解です！";
     } else {
-      resultMessage = "✗ 不正解です。正解は " + radix.expectedAnswer + " です。";
+      resultMessage = "✗ 不正解です。正解は " + radix.expectedAnswerString + " です。";
     }
 
     $("#radix-result-text").textContent = resultMessage;
+
+    // メモ欄をクリア
+    var scratch = $("#radix-scratch-area");
+    if (scratch) scratch.value = "";
 
     // UI更新
     $("#radix-feedback-area").hidden = false;
